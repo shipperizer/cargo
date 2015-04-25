@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+  <ul class=info>
+  {% for key in info %}
+    <li><h2>{{ key }}:</h2>{{ info[key]|safe }}
+  {% else %}
+    <li><em>info not available</em>
+  {% endfor %}    
+  </ul>
+  <ul class=version>
+  {% for key in version %}
+    <li><h2>{{ key }}:</h2>{{ version[key]|safe }}
+  {% else %}
+    <li><em>version not available</em>
+  {% endfor %}
+  </ul>
+{% endblock %}
