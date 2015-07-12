@@ -6,7 +6,11 @@ python:
 # command to install dependencies
 install: "pip install -r requirements.txt"
 # command to run tests
-script: "py.test test --cov cargo --cov-config .coveragerc --cov-report xml --junit-xml=results.xml"
+script:
+  - "touch conftest.py"
+  - "python setup.py test -a '--cov $(MOD_NAME) --cov-config .coveragerc --cov-report xml --junit-xml=results.xml'"
+  - "rm conftest.py"
+
 os:
  - osx
  - linux
