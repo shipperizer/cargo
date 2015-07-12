@@ -1,0 +1,15 @@
+language: python
+python:
+  - "3.2"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+# command to install dependencies
+install: "make install"
+# command to run tests
+script: "make test"
+os:
+ - osx
+ - linux
+notifications:
+   email: false
