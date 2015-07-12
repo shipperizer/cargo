@@ -7,7 +7,7 @@ python:
 # command to install dependencies
 install: "pip install -r requirements.txt"
 # command to run tests
-script: "make test"
+script: "py.test test --cov cargo --cov-config .coveragerc --cov-report xml --junit-xml=results.xml"
 os:
  - osx
  - linux
