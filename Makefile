@@ -4,52 +4,56 @@ PACKAGES=python python-pip
 DEPENDENCIES=requirements.txt
 MOD_NAME=cargo
 VERSION_NUMBER?="0.0.99"
+WSGI=gunicorn
+MSG?="change-me-plz"
 
-
-.PHONY: info install test wheel
+.PHONY: info install test
 
 clean-build:
 		rm -rf build/ dist/
 		rm -rf $(MOD_NAME)-$(VERSION_NUMBER)_* $(MOD_NAME).egg-info
+		rm -rf docs/_build
 
 info:
 		@echo "****************************************************************"
 		@echo "To build this project you need these dependencies: $(PACKAGES)"
 		@echo "Check requirements.txt/setup.py file to see python dependencies."
-		@echo "Npm build dependencies are: $(NPM_PACKAGES)"
 		@echo "****************************************************************"
 		@echo "USAGE:"
 		@echo "- To install dependencies: make install"
-		@echo "- To build the egg/wheel: make egg | make wheel"
 		@echo "- To launch: make [start|stop|debug]"
 		@echo "- To test: make test   **unit(integration)test"
 
-start:
-		$(PYTHON) bootstrap.py
+start: db-upgrade
+		$(WSGI) -w 4 "$(MOD_NAME).bootstrap:app"
 
-make-db:
-		$(PYTHON) -c 'from flasking.db.database import init_db; init_db()' 
+debug: db-upgrade
+		DEBUG=1 $(PYTHON) "$(MOD_NAME)/bootstrap.py" runserver
+
+debug-gun: db-upgrade
+		DEBUG=1 $(WSGI) -w 4 "$(MOD_NAME).bootstrap:app"
 
 install: build-reqs info
 		@echo "Python dependencies"
 		$(PIP) install -r $(DEPENDENCIES)
-		
+
 build-reqs:
 		$(PIP) install --upgrade pip
 		$(PIP) install --upgrade setuptools
 		# pip you are so stupid http://stackoverflow.com/a/25288078
 		$(PIP) install --upgrade setuptools
-		$(PIP) install wheel
 
 test: build-reqs
 		touch conftest.py
-		py.test-3.4 test 
+		$(PYTHON) setup.py test -a '--cov $(MOD_NAME) --cov-config .coveragerc --cov-report xml --junit-xml=results.xml'
 		rm conftest.py
 
-egg: clean-build
-		$(PYTHON) setup.py bdist_egg --exclude-source-files > build.log
+db-init:
+		$(PYTHON) "$(MOD_NAME)/bootstrap.py" db init
+		$(PYTHON) "$(MOD_NAME)/bootstrap.py" db migrate
 
-wheel: build-reqs egg
-		$(PIP) wheel --wheel-dir=$(MOD_NAME)-$(VERSION_NUMBER) -r $(DEPENDENCIES)
-		wheel convert dist/*.egg
-		
+db-migrate:
+		$(PYTHON) "$(MOD_NAME)/bootstrap.py" db migrate -m"$(MSG)"
+
+db-upgrade:
+		$(PYTHON) "$(MOD_NAME)/bootstrap.py" db upgrade
