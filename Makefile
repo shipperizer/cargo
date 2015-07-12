@@ -1,6 +1,5 @@
-PYTHON=/usr/bin/env python
-PIP=/usr/bin/pip
-PACKAGES=python python-pip
+PYTHON=python
+PIP=pip
 DEPENDENCIES=requirements.txt
 MOD_NAME=cargo
 VERSION_NUMBER?="0.0.99"
