@@ -1,5 +1,6 @@
-PYTHON=python
-PIP=pip
+PYTHON=/usr/bin/env python
+PIP=/usr/bin/pip
+PACKAGES=python python-pip
 DEPENDENCIES=requirements.txt
 MOD_NAME=cargo
 VERSION_NUMBER?="0.0.99"
@@ -27,7 +28,7 @@ start: db-upgrade
 		$(WSGI) -w 4 "$(MOD_NAME).bootstrap:app"
 
 debug: db-upgrade
-		DEBUG=1 $(PYTHON) "$(MOD_NAME)/bootstrap.py" runserver
+		DEBUG=1 $(PYTHON) "$(MOD_NAME)/bootstrap" runserver
 
 debug-gun: db-upgrade
 		DEBUG=1 $(WSGI) -w 4 "$(MOD_NAME).bootstrap:app"
