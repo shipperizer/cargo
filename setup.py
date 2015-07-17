@@ -44,7 +44,6 @@ setup(
     tests_require=[
         'pytest-cov',
         'mock',
-        'python-coveralls'
     ],
     author='shipperizer',
     author_email='alexcabb@gmail.com',
