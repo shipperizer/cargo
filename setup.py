@@ -42,7 +42,7 @@ setup(
         'alembic',
     ],
     tests_require=[
-        'pytest-cov',
+        'pytest',
         'mock',
         'python-coveralls'
     ],
