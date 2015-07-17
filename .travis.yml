@@ -3,15 +3,13 @@ python:
   - "3.2"
   - "3.3"
   - "3.4"
-# command to install dependencies
-install: "pip install -r requirements.txt"
-# command to run tests
-script:
-  - py.test test --doctest-modules --pep8 coveralls -v --cov coveralls --cov-report term-missing
-after_success:
-  - coveralls
+install: "pip install -e ."
 os:
  - osx
  - linux
 notifications:
    email: false
+script:
+  - py.test test --doctest-modules --pep8 coveralls -v --cov coveralls --cov-report term-missing
+after_success:
+  - coveralls
